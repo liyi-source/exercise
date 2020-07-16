@@ -1,0 +1,11 @@
+server:
+  port: 18011
+spring:
+  application:
+    name: managerment-rabbit
+  rabbitmq:
+    virtual-host: /chat
+    host: 127.0.0.1
+    port: 5672
+    username: chat
+    password: chat

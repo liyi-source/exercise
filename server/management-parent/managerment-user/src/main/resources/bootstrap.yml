@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: user
+  profiles:
+    active: dev
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+      uri: http://localhost:8762
+

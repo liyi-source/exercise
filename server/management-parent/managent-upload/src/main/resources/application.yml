@@ -1,0 +1,10 @@
+server:
+  port: 18012
+spring:
+  application:
+    name: upload-server
+  datasource:
+    url: jdbc:mysql://47.110.93.6:3306/wx_gzh?serverTimezone=UTC&characterEncoding=utf-8
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver

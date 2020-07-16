@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="client-server" />
+        <module name="config-server" />
+        <module name="customer-server" />
+        <module name="eureka-server" />
+        <module name="management-common" />
+        <module name="managent-upload" />
+        <module name="manager-chat" />
+        <module name="managerment-user" />
+        <module name="managermet-rabbit" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="managementcommon" target="1.8" />
+      <module name="rabbitmqchat" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="client-server" options="-parameters" />
+      <module name="config-server" options="-parameters" />
+      <module name="customer-server" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="managent-upload" options="-parameters" />
+      <module name="manager-chat" options="-parameters" />
+      <module name="managerment-user" options="-parameters" />
+      <module name="managermet-rabbit" options="-parameters" />
+    </option>
+  </component>
+</project>

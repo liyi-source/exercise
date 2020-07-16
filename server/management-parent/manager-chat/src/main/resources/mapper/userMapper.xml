@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ly.chat.managerchat.mapper.UserMapper">
+
+    <!--登陆-->
+    <select id="login" resultType="java.util.Map">
+        select
+            t.user_id "userId",
+            t.password "password",
+            t.user_name "userName",
+            t.address "address"
+        from
+            account t
+        where
+            t.user_id = #{userId}
+            and t.password=#{password}
+    </select>
+    <!--根据聊天记录查询出聊天列表-->
+    <select id="getAllRecordById" resultType="java.util.Map">
+        select
+                a.user_id "userId",
+                a.user_name "userName",
+                a.address "address",
+                a.head_img "headImg",
+                (select count(*) from chat_record c where c.to_user_id=#{userId} and c.from_user_id=a.user_id and c.is_read='0') "count",
+                (select content from chat_record c where c.to_user_id=#{userId} and c.from_user_id=a.user_id or c.to_user_id=a.user_id and c.from_user_id=#{userId} order by id desc LIMIT 0,1) "msg",
+                (select create_time from chat_record c where c.to_user_id=#{userId} and c.from_user_id=a.user_id or c.to_user_id=a.user_id and c.from_user_id=#{userId} order by id desc LIMIT 0,1) "createTime"
+            from
+                account a,
+                (SELECT DISTINCT CASE from_user_id when #{userId} THEN to_user_id ELSE from_user_id END 'chat' FROM chat_record where from_user_id=#{userId} or to_user_id=#{userId}) b
+            where a.user_id=b.chat
+    </select>
+    <!--插入聊天记录-->
+    <insert id="saveChatRecord" parameterType="java.util.Map">
+        insert into chat_record(
+            from_user_id,to_user_id,content,msg_type,create_time
+        ) values(
+            #{fromUserId},#{toUserId},#{msg},#{msgType},now()
+        )
+    </insert>
+    <!--查询聊天记录-->
+    <select id="queryChatRecord" parameterType="java.util.Map" resultType="com.alibaba.fastjson.JSONObject">
+        select
+            from_user_id "fromUserId",
+            to_user_id "toUserId",
+            content "msg",
+            create_time "createTime"
+        from chat_record cr
+            where cr.from_user_id=#{fromUserId}
+                and cr.to_user_id=#{toUserId}
+                or cr.from_user_id=#{toUserId}
+                and cr.to_user_id=#{fromUserId}
+
+    </select>
+    <!--更改消息状态（已读、未读）-->
+    <insert id="updateChatState" parameterType="java.util.Map">
+        update chat_record set is_read='1' where from_user_id=#{toUserId} and to_user_id=#{fromUserId} and is_read='0'
+    </insert>
+    <!--查询好友-->
+    <select id="queryAllFriendById" resultType="java.util.Map">
+        select
+            t.user_id "userId",
+            t.password "password",
+            t.user_name "userName",
+            t.address "address",
+            t.head_img "headImg"
+        from
+            account t , chat_friend cf
+        where
+            t.user_id=cf.friend_user_id
+            and cf.user_id = #{userId}
+            <if test="userName != null and userName != ''">
+                and t.user_name like CONCAT(CONCAT('%',#{userName}),'%')
+            </if>
+    </select>
+
+    <!--查询用户-->
+    <select id="queryUser" resultType="java.util.Map">
+        select
+            t.user_id "userId",
+            t.password "password",
+            t.user_name "userName",
+            t.address "address",
+            t.head_img "headImg"
+        from
+            account t
+        where
+            t.user_id like CONCAT(CONCAT('%',#{userId}),'%')
+    </select>
+
+    <!--添加好友-->
+    <insert id="addFriend">
+        insert into chat_friend(
+            user_id,friend_user_id,create_time
+        )values(
+            #{userId},#{friendUserId},now()
+        )
+    </insert>
+</mapper>
